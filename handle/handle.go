@@ -3,8 +3,7 @@ package handle
 import (
 	"Haoran/haoran"
 	"log"
-	"math/rand"
-	"time"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/liuzl/gocc"
@@ -14,7 +13,9 @@ func Router(r *gin.Engine) {
 	r.GET("/ping", ping)
 	r.GET("/readme", readme)
 	r.GET("/chapters", chapters)
+	r.GET("/chapters/detial", chapterDetial)
 	r.GET("/paragraphs", paragraphs)
+	r.GET("/paragraphs/detial", paragraphsDetial)
 }
 
 func ping(c *gin.Context) {
@@ -53,24 +54,38 @@ func chapters(c *gin.Context) {
 	})
 }
 
+func chapterDetial(c *gin.Context) {
+	cID := c.Query("chapterID")
+	id, err := strconv.Atoi(cID)
+	if err != nil {
+		c.Status(500)
+		return
+	}
+
+	res := haoran.ChapterDetail(id)
+	c.JSON(200, *res)
+}
+
 func paragraphs(c *gin.Context) {
-	paras := haoran.Paragraphs()
+	res := haoran.Paragraphs()
 
-	rand.Seed(time.Now().UnixNano())
-	index := rand.Intn(len(paras))
+	c.JSON(200, *res)
+}
 
-	t2s, err := gocc.New("t2s")
+func paragraphsDetial(c *gin.Context) {
+	cID := c.Query("chapterID")
+	cId, err := strconv.Atoi(cID)
 	if err != nil {
-		log.Fatal(err)
+		c.Status(500)
+		return
 	}
 
-	res, err := t2s.Convert(paras[index])
+	pID := c.Query("paragraphID")
+	pId, err := strconv.Atoi(pID)
 	if err != nil {
-		log.Fatal(err)
+		c.Status(500)
+		return
 	}
-
-	c.JSON(200, gin.H{
-		"index":     index,
-		"paragraph": res,
-	})
+	res := haoran.ParagraphsDetial(cId, pId)
+	c.JSON(200, *res)
 }

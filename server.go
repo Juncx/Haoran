@@ -13,5 +13,6 @@ func main() {
 	r := gin.Default()
 	handle.Router(r)
 
-	r.Run()
+	//go r.RunTLS(":443", "../ssl/server.crt", "../ssl/server.key")
+	r.Run(":8080")
 }
