@@ -9,22 +9,13 @@ import (
 	"github.com/liuzl/gocc"
 )
 
-func Router(r *gin.Engine) {
-	r.GET("/ping", ping)
-	r.GET("/readme", readme)
-	r.GET("/chapters", chapters)
-	r.GET("/chapters/detial", chapterDetial)
-	r.GET("/paragraphs", paragraphs)
-	r.GET("/paragraphs/detial", paragraphsDetial)
-}
-
-func ping(c *gin.Context) {
+func Ping(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
 	})
 }
 
-func readme(c *gin.Context) {
+func Readme(c *gin.Context) {
 	res, err := haoran.Readme()
 	if err != nil {
 		c.String(500, err.Error())
@@ -34,7 +25,7 @@ func readme(c *gin.Context) {
 	c.String(200, res)
 }
 
-func chapters(c *gin.Context) {
+func Chapters(c *gin.Context) {
 	chaps := haoran.Chapters()
 
 	t2s, err := gocc.New("t2s")
@@ -54,7 +45,7 @@ func chapters(c *gin.Context) {
 	})
 }
 
-func chapterDetial(c *gin.Context) {
+func ChapterDetial(c *gin.Context) {
 	cID := c.Query("chapterID")
 	id, err := strconv.Atoi(cID)
 	if err != nil {
@@ -66,13 +57,13 @@ func chapterDetial(c *gin.Context) {
 	c.JSON(200, *res)
 }
 
-func paragraphs(c *gin.Context) {
+func Paragraphs(c *gin.Context) {
 	res := haoran.Paragraphs()
 
 	c.JSON(200, *res)
 }
 
-func paragraphsDetial(c *gin.Context) {
+func ParagraphsDetial(c *gin.Context) {
 	cID := c.Query("chapterID")
 	cId, err := strconv.Atoi(cID)
 	if err != nil {

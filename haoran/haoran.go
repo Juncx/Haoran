@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/go-redis/redis"
 	"github.com/liuzl/gocc"
 )
 
@@ -21,29 +20,31 @@ func (m *LunYu) MarshalBinary() ([]byte, error) {
 	return json.Marshal(m)
 }
 
-func cache() {
-	// redis client
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // use default Addr
-		Password: "",               // no password set
-		DB:       0,                // use default DB
-	})
-	defer rdb.Close()
-
-	// set redis zset
-	for k, v := range LUNYUALL {
-		mes := redis.Z{
-			Score:  float64(k),
-			Member: &v,
-		}
-
-		err := rdb.ZAdd("lunyu_all", mes).Err()
-		if err != nil {
-			panic(err)
-		}
-	}
-
-}
+/*
+ *func cache() {
+ *    // redis client
+ *    rdb := redis.NewClient(&redis.Options{
+ *        Addr:     "localhost:6379", // use default Addr
+ *        Password: "",               // no password set
+ *        DB:       0,                // use default DB
+ *    })
+ *    defer rdb.Close()
+ *
+ *    // set redis zset
+ *    for k, v := range LUNYUALL {
+ *        mes := redis.Z{
+ *            Score:  float64(k),
+ *            Member: &v,
+ *        }
+ *
+ *        err := rdb.ZAdd("lunyu_all", mes).Err()
+ *        if err != nil {
+ *            panic(err)
+ *        }
+ *    }
+ *
+ *}
+ */
 
 func init() {
 	content, err := readFile(CONTENTPATH)
