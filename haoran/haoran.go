@@ -95,6 +95,12 @@ func Chapters() []string {
 	return res
 }
 
+func ChapterRand() *Chapter {
+	rand.Seed(time.Now().UnixNano())
+	cId := rand.Intn(len(LUNYUALL))
+	return &LUNYUALL[cId]
+}
+
 func ChapterDetail(chapterID int) *Chapter {
 	return &LUNYUALL[chapterID]
 }
